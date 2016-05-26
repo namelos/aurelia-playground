@@ -6,13 +6,15 @@ import {
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 
-import { createDecroator } from '../createDecorator'
-import { createModule } from '../createModule'
+import { createDecroator } from 'redux-aurelia'
+import { createModule } from 'redux-aurelia'
 
 import counter from './counter'
 export { increment, decrement, add } from './counter'
+import { todos } from './todo'
+export { addTodo, toggleTodo }  from './todo'
 
-const reducer = combineReducers({ counter })
+const reducer = combineReducers({ counter, todos })
 
 export const store = compose(
   applyMiddleware(thunk, logger())
@@ -20,4 +22,3 @@ export const store = compose(
 
 export const decorator = createDecroator(store)
 export const module = createModule(store)
-

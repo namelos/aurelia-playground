@@ -1,3 +1,13 @@
 <template>
-
+  <p>click 'add' to add. click list item to complete.</p>
+  <input type="text" value.bind="new">
+  <button click.trigger="addTodo(new)">add</button>
+  <ul>
+    <li
+        repeat.for="todo of state.todos"
+        click.trigger="toggleTodo($index)"
+        css="textDecoration: ${todo.completed ? 'line-through' : 'none' }">
+      ${todo.text}
+    </li>
+  </ul>
 </template>

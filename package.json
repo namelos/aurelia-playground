@@ -50,6 +50,7 @@
     "jquery": "^2.2.3",
     "numeral": "^1.5.3",
     "redux": "^3.5.2",
+    "redux-aurelia": "0.0.2",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.1.0"
   },

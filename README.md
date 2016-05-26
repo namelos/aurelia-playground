@@ -1,57 +1,87 @@
-# aurelia-skeleton-navigation-webpack
+### Showcase for redux-aurelia
+This is a showcase for redux-aurelia
 
-## Getting Started
+[redux-aurelia(github repository)](https://github.com/namelos/redux-aurelia)
+[redux-aurelia(npm package)](https://www.npmjs.com/package/redux-aurelia)
 
-Before you start, make sure you have a working [NodeJS](http://nodejs.org/) environment, preferably with NPM 3.
-
-From the project folder, execute the following command:
-
-```shell
-npm install
+### Install
+```
+npm install --save redux-aurelia
 ```
 
-This will install all required dependencies, including a local version of Webpack that is going to
-build and bundle the app. There is no need to install Webpack globally.
+### Usage
 
-To run the app execute the following command:
+```js
+// just set up redux store as normal
+import { createStore } from 'redux'
 
-```shell
-npm run dev
+import { createDecroator, createModule } from 'redux-aurelia'
+
+import counter from './counter'
+export { increment, decrement, add } from './counter'
+
+const reducer = combineReducers({ counter })
+
+export const store = createStore(reducer)
+
+// setting up your decorator
+export const decorator = createDecroator(store)
+export const module = createModule(store)
 ```
 
-This command starts the Webpack development server that serves the built bundles.
-You can now browse the skeleton app at http://localhost:3000. Changes in the code
-will automatically build and reload the app.
+```js
+// some-vm.js
+import { decorator, increment, decrement, add } from './store'
 
-> **Note**: when using NPM 2.x, you might encounter a run-time error like '_aureliaPal.DOM.injectStyles is not a function'.
-To work around this issue, execute the command *npm dedupe*.
+@decorator({ increment, decrement, add })
+export default class {
 
-## Bundling
+  constructor(store, { increment, decrement, add }) {
+    this.store = store
+    this.increment = increment
+    this.decrement = decrement
+    this.add = add
+    this.sync()
+    store.subscribe(this.sync)
+  }
 
-To build a development bundle (output to /build) execute:
-
-```shell
-npm run build
+  sync = () => {
+    this.counter = this.store.getState().counter
+  }
+}
 ```
 
-To build an optimized, minified production bundle (output to /dist) execute:
-
-```shell
-npm run prod
+```html
+<!--some-view.html-->
+<template>
+  <p>counter: ${counter}</p>
+  <button click.trigger="increment()">increment</button>
+  <button click.trigger="decrement()">decrement</button>
+  <button click.trigger="add(5)">add 5</button>
+  <input type="text" value.bind="input">
+  <button click.trigger="add(input)">add n</button>
+</template>
 ```
 
-The production bundle includes all files that are required for deployment.
+### Bonus Magic:
+You could easily set up a module with out the model view class, most of the time...
 
+```js
+// some-other-vm.js
+import { module, increment, decrement, add } from './store'
 
-## Plugin configuration
-The aurelia-webpack-plugin has its own configuration options that you may need to set.
-Please see https://github.com/aurelia/webpack-plugin for more information.
-
-## Testing
-To run the unit tests:
-
-```shell
-npm run test
+export default module({ increment, decrement, add })
+// Boom, as easy as done.
 ```
 
-> **Note**: The e2e tests aren't working yet
+```html
+<!--some-other-view.html-->
+<template>
+  <p>counter: ${state.counter}</p>
+  <button click.trigger="increment()">increment</button>
+  <button click.trigger="decrement()">decrement</button>
+  <button click.trigger="add(5)">add 5</button>
+  <input type="text" value.bind="input">
+  <button click.trigger="add(input)">add n</button>
+</template>
+```
