@@ -6,8 +6,7 @@ import {
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 
-import { createDecroator } from 'redux-aurelia'
-import { createModule } from 'redux-aurelia'
+import { createDecroator, createModule } from 'redux-aurelia'
 
 import counter from './counter'
 export { increment, decrement, add } from './counter'
